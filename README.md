@@ -10,3 +10,6 @@ MQTT_USER=
 MQTT_PASS=
 MQTT_CLIENT_ID=
 ```
+
+#### Docker build
+You can use `dockerBuild.sh` file inside the build folder to create docker image for testing

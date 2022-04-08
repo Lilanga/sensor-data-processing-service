@@ -29,7 +29,7 @@ func subscribeForTopic(clientID string, topic string, wait sync.WaitGroup) {
 	}
 }
 
-//todo: still need mqtt library structs here, need to create higher order function or message topic approach
+// todo: still need mqtt library structs here, need to create higher order function or message topic approach
 func messagePubHandler(client mqtt.Client, msg mqtt.Message) {
 	fmt.Printf("Message handler message: %s from topic: %s\n", msg.Payload(), msg.Topic())
 }
