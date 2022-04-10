@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"sync"
 
+	"github.com/Lilanga/sensor-data-processing-service/internal/models"
 	mqttLib "github.com/Lilanga/sensor-data-processing-service/pkg/mqtt"
+	TimescaleDBClient "github.com/Lilanga/sensor-data-processing-service/pkg/timescaledb"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/joho/godotenv"
 )
@@ -31,5 +34,18 @@ func subscribeForTopic(clientID string, topic string, wait sync.WaitGroup) {
 
 // todo: still need mqtt library structs here, need to create higher order function or message topic approach
 func messagePubHandler(client mqtt.Client, msg mqtt.Message) {
-	fmt.Printf("Message handler message: %s from topic: %s\n", msg.Payload(), msg.Topic())
+	reading, err := models.GetReadingFromMqttPayload(string(msg.Payload()))
+	if err != nil {
+		log.Printf("Unable to parse mqtt payload %v\n", err)
+		return
+	}
+
+	dbClient := TimescaleDBClient.GetTimescaleDBClient()
+	err = dbClient.InsertReading(*reading)
+	if err != nil {
+		log.Printf("Unable to insert mqtt payload %v\n", err)
+		return
+	}
+
+	fmt.Printf("Message handler inserted message: %s from topic: %s\n", msg.Payload(), msg.Topic())
 }
