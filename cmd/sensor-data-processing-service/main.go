@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"sync"
@@ -40,8 +41,8 @@ func messagePubHandler(client mqtt.Client, msg mqtt.Message) {
 		return
 	}
 
-	dbClient := TimescaleDBClient.GetTimescaleDBClient()
-	err = dbClient.InsertReading(*reading)
+	dbClient := TimescaleDBClient.GetTimescaleDBClient(context.Background())
+	err = dbClient.InsertReading(context.Background(), *reading)
 	if err != nil {
 		log.Printf("Unable to insert mqtt payload %v\n", err)
 		return

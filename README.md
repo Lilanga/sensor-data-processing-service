@@ -33,6 +33,9 @@ TSDB_DB=
 
 // Port of the timescale database
 TSDB_PORT=
+
+// SSL mode of the Timescaledb connection. one of `require`, `prefer`, `allow`, `disabled`
+TSDB_SSL_MODE=
 ```
 
 #### Docker build
